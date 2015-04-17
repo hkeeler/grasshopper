@@ -111,9 +111,6 @@ class AddressPointServiceSpec extends FlatSpec with MustMatchers with ScalatestR
       status mustBe OK
       contentType.mediaType mustBe `application/json`
       val f = responseAs[Array[Feature]]
-      println(f(0))
-      println(getPointFeature1)
-
       f(0) mustBe getPointFeature1
     }
     val a = "1311+30th+St+NW+Washington+DC+20007"
