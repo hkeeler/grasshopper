@@ -1,8 +1,6 @@
 package grasshopper.addresspoints
 
-import java.time.temporal.TemporalUnit
 import java.time.{ Duration, Instant }
-
 import addresspoints.api.Service
 import addresspoints.model
 import addresspoints.model.AddressInput
@@ -29,25 +27,45 @@ class AddressPointServiceSpec extends FlatSpec with MustMatchers with ScalatestR
 
   val client = server.client
 
-  private def getPointFeature() = {
+  private def getPointFeature1() = {
     val p = Point(-77.0590232, 38.9072597)
-    val props = Map("geometry" -> p, "address" -> "1311 30th St NW Washington DC 20007")
-    val schema = Schema(List(Field("geometry", GeometryType()), Field("address", StringType())))
+    val props = Map(
+      "geometry" -> p,
+      "address" -> "1311 30th St NW Washington DC 20007",
+      "source" -> "U.S. Census Bureau - TIGER/Line",
+      "loadDate" -> "2015-04-16T20:39:23.711Z"
+    )
+    val schema = Schema(List(
+      Field("geometry", GeometryType()),
+      Field("address", StringType()),
+      Field("source", StringType()),
+      Field("loadDate", StringType())
+    ))
     Feature(schema, props)
   }
 
-  private def getPointFeature1() = {
+  private def getPointFeature2() = {
     val p = Point(-77.059017, 38.907271)
-    val props = Map("geometry" -> p, "address" -> "1315 30th St NW Washington DC 20007")
-    val schema = Schema(List(Field("geometry", GeometryType()), Field("address", StringType())))
+    val props = Map(
+      "geometry" -> p,
+      "address" -> "1315 30th St NW Washington DC 20007",
+      "source" -> "U.S. Census Bureau - TIGER/Line",
+      "loadDate" -> "2015-04-16T20:39:23.890Z"
+    )
+    val schema = Schema(List(
+      Field("geometry", GeometryType()),
+      Field("address", StringType()),
+      Field("source", StringType()),
+      Field("loadDate", StringType())
+    ))
     Feature(schema, props)
   }
 
   override def beforeAll = {
     server.start()
     server.createAndWaitForIndex("address")
-    server.loadFeature("address", "point", getPointFeature)
     server.loadFeature("address", "point", getPointFeature1)
+    server.loadFeature("address", "point", getPointFeature2)
     client.admin().indices().refresh(new RefreshRequest("address")).actionGet()
   }
 
@@ -93,14 +111,17 @@ class AddressPointServiceSpec extends FlatSpec with MustMatchers with ScalatestR
       status mustBe OK
       contentType.mediaType mustBe `application/json`
       val f = responseAs[Array[Feature]]
-      f(0) mustBe getPointFeature
+      println(f(0))
+      println(getPointFeature1)
+
+      f(0) mustBe getPointFeature1
     }
     val a = "1311+30th+St+NW+Washington+DC+20007"
     Get("/addresses/points/" + a) ~> routes ~> check {
       status mustBe OK
       contentType.mediaType mustBe `application/json`
       val f = responseAs[Array[Feature]]
-      f(0) mustBe getPointFeature
+      f(0) mustBe getPointFeature1
     }
   }
 
