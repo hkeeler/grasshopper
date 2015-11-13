@@ -20,7 +20,7 @@ class AddressParserClientSpec extends FlatSpec with MustMatchers {
   }
 
   "A 'standardize' request" must "parse an address string into its component parts" in {
-    val maybeAddress = Await.result(AddressParserClient.standardize("1311 30th St NW washington dc 20007"), timeout)
+    val maybeAddress = Await.result(AddressParserClient.parse("1311 30th St NW washington dc 20007"), timeout)
     maybeAddress match {
       case Right(a) =>
         a.parts.addressNumber mustBe "1311"

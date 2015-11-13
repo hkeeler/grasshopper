@@ -18,7 +18,7 @@ trait GeocodeFlow extends AddressPointsGeocode with CensusGeocode {
 
   def parseFlow: Flow[String, ParsedAddress, Unit] = {
     Flow[String]
-      .mapAsync(4)(a => AddressParserClient.standardize(a))
+      .mapAsync(4)(a => AddressParserClient.parse(a))
       .map { x =>
         if (x.isRight) {
           x.right.getOrElse(ParsedAddress.empty)

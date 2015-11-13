@@ -13,7 +13,7 @@ import akka.stream.io.SynchronousFileSource
 import akka.stream.scaladsl.{Flow, Source, Sink}
 import akka.util.ByteString
 import com.typesafe.config.Config
-import grasshopper.client.parser.model.{ AddressPart, ParsedAddress }
+import grasshopper.client.parser.model.{ AddressParts, ParsedAddress }
 import grasshopper.elasticsearch.ElasticsearchServer
 import grasshopper.geocoder.model.{GeocodeResponse, GeocodeStatus}
 import grasshopper.geocoder.util.TestData._
@@ -61,7 +61,7 @@ class HttpServiceSpec extends FlatSpec with MustMatchers with ScalatestRouteTest
       status mustBe OK
       contentType.mediaType mustBe `application/json`
       val resp = responseAs[GeocodeResponse]
-      resp.query mustBe ParsedAddress("3146 M St NW Washington DC 20007",AddressPart("3146","Washington", "DC", "M St NW","20007"))
+      resp.query mustBe ParsedAddress("3146 M St NW Washington DC 20007",AddressParts("3146","Washington", "DC", "M St NW","20007"))
     }
   }
 

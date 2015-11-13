@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
 import geometry.Point
-import grasshopper.client.parser.model.{AddressPart, ParsedAddress}
+import grasshopper.client.parser.model.{AddressParts, ParsedAddress}
 import grasshopper.elasticsearch.ElasticsearchServer
 import grasshopper.model.census.ParsedInputAddress
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest
@@ -71,12 +71,12 @@ class GeocodeFlowsSpec extends FlatSpec with MustMatchers with GeocodeFlow with 
   it must "transform parsed addresses into parsed input addresses" in {
     val inputParsedList = List(
       ParsedAddress("1311 30th St NW Washington DC 20007",
-        AddressPart("1311","Washington","DC","30th St NW","20007")),
+        AddressParts("1311","Washington","DC","30th St NW","20007")),
       ParsedAddress("3146 M St NW Washington DC 20007",
-        AddressPart("3146","Washington","DC","M St NW","20007")),
+        AddressParts("3146","Washington","DC","M St NW","20007")),
       ParsedAddress("198 President St Arkansas City AR 71630",
-        AddressPart("198","Arkansas City","AR","President St","71630")),
-      ParsedAddress("1 Main St City ST 00001",AddressPart("1","St City","ST","Main","00001")))
+        AddressParts("198","Arkansas City","AR","President St","71630")),
+      ParsedAddress("1 Main St City ST 00001",AddressParts("1","St City","ST","Main","00001")))
 
     val source = Source(() => inputParsedList.toIterator)
     val future = source.via(parsedInputAddressFlow).grouped(4).runWith(Sink.head)

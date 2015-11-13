@@ -15,6 +15,7 @@ class ParserJsonProtocolSpec extends FlatSpec with MustMatchers with ParserJsonP
       "upSince": "2015-05-06T19:08:26.568966+00:00"
     }
     """
+
     val parserStatus = statusStr.parseJson.convertTo[ParserStatus]
     parserStatus.host mustBe "yourhost.local"
     parserStatus.status mustBe "OK"
@@ -31,7 +32,6 @@ class ParserJsonProtocolSpec extends FlatSpec with MustMatchers with ParserJsonP
     )
 
     val json = parserStatus.toJson.toString
-    //println(json)
     json.parseJson.convertTo[ParserStatus] mustBe parserStatus
 
   }
@@ -39,29 +39,17 @@ class ParserJsonProtocolSpec extends FlatSpec with MustMatchers with ParserJsonP
   "An AddressPart" must "deserialize from JSON" in {
     val addrPartStr = """
      {
-        "addressNumber": "1311",
-        "city": "washington",
-        "state": "dc",
-        "streetName": "30th St",
-        "zip": "20007"
+        "name": "street_number",
+        "value": "1234"
       }
     """
     val addrPart = addrPartStr.parseJson.convertTo[AddressPart]
-    addrPart.addressNumber mustBe "1311"
-    addrPart.city mustBe "washington"
-    addrPart.state mustBe "dc"
-    addrPart.streetName mustBe "30th St"
-    addrPart.zip mustBe "20007"
+    addrPart.name mustBe "street_number"
+    addrPart.value mustBe "1234"
   }
 
   it must "serialize to JSON" in {
-    val addrPart = AddressPart(
-      "1311",
-      "washington",
-      "dc",
-      "30th St",
-      "20007"
-    )
+    val addrPart = AddressPart("street_number", "1234")
 
     val json = addrPart.toJson.toString
     json.parseJson.convertTo[AddressPart] mustBe addrPart
@@ -91,7 +79,7 @@ class ParserJsonProtocolSpec extends FlatSpec with MustMatchers with ParserJsonP
   }
 
   it must "serialize to JSON" in {
-    val addrPart = AddressPart(
+    val addrPart = AddressParts(
       "1311",
       "washington",
       "dc",
