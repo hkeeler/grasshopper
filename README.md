@@ -68,6 +68,11 @@ each project representing a specific task and usually a [Microservice](http://en
         [info]   * grasshopper
         [info]     metrics
         [info]     model
+        [info]     test_harness
+        [info] In git://github.com/cfpb/hmda-geo.git
+        [info]     api
+        [info]     client
+        [info]     hmdageo
 
         > project geocoder 
         [info] Set current project to geocoder (in build file: /path/to/geocoder/)
