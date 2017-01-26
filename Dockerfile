@@ -1,18 +1,14 @@
-# Grasshopper Geocoder Dockerfile
-# Version: 0.0.1
-
-# Image builds from the official Docker Java image
-
-FROM java:8
+FROM centos:7 
 
 MAINTAINER Juan Marin Otero <juan.marin.otero@gmail.com>
 
-WORKDIR /
+RUN yum update -y && \
+    yum install -y java-1.8.0-openjdk-headless
 
-USER daemon
+WORKDIR /opt
+
+COPY target/scala-2.11/grasshopper.jar .
+
+USER nobody
 
 ENTRYPOINT ["java", "-jar", "/opt/grasshopper.jar"]
-
-EXPOSE 31010
-
-COPY target/scala-2.11/grasshopper.jar /opt/grasshopper.jar
